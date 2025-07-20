@@ -24,36 +24,50 @@ The objectives (OB) of this analysis are to:
 ## References
 
 * https://www.r-bloggers.com/2016/11/extracting-exif-data-from-photos-using-r/ for the basic concept.
-* https://youtu.be/TZ8CxNNHiUU?si=qBd84kY_Ep0JwaiS for creating maps using sf and leaflet.
+* https://youtu.be/TZ8CxNNHiUU?si=qBd84kY_Ep0JwaiS for creating maps using `sf` and `leaflet`.
+* https://rstudio.github.io/leaflet/index.html for `leaflet` examples.
 
 # Preparation
 ## Libraries etc
 ```{r Libraries etc}
-library(exiftoolr) # Need to run 'install_exiftoolr()' from R command line after install.packages('exiftoolr')
+# Clear the environment
+rm(list=ls())
+
+library(exiftoolr) # To extract EXIF information from photos; Need to run 'install_exiftoolr()' from R command line after install.packages('exiftoolr')
 library(dplyr)
-library(leaflet)
-library(sf)
+library(sf) # For making geospatial data frames
+library(leaflet) # For making interactive maps
+library(htmltools) # For map popups
 ```
 
 
 ## Import and Prepare the Data
 ```{r Import and Prepare the Data}
-files <- list.files("./Photos/", pattern = "*.JPG")
-df_base <- exif_read(paste("./Photos/",files, sep="")) 
+files <- list.files("./Input/Tree Photos", pattern = "*.JPG")
+df_base <- exif_read(paste("./Input/Tree Photos/", files, sep="")) 
 ```
+
+```{r Merge tree girths}
+df_base <- read.csv("Input/tree_girths.csv") |> 
+                      select(Girth_mm) |>
+                      cbind(df_base)
+```
+
 
 ```{r create sf object}
 df_map <- df_base |> 
-  select(GPSLatitude, GPSLongitude) |> 
+  select(FileName, DateTimeOriginal, Girth_mm, GPSLatitude, GPSLongitude) |> 
   st_as_sf(coords = c("GPSLongitude","GPSLatitude"), remove = FALSE, crs = 4326)
 ```
 
 
 ## OB 1
 ```{r Interactive Map}
-leaflet(elementId = "Trees") |>
+m <- leaflet(elementId = "Trees") |>
   addTiles(group = "OSM", options = providerTileOptions(minZoom = 17, maxZoom = 20)) |>
-  addMarkers(data = df_map)
+  addMarkers(data = df_map, popup = ~htmlEscape(paste("Girth:", Girth_mm, "mm")))
+
+m
 ```
 
 ## OB 2
