@@ -71,9 +71,17 @@ pal <- colorNumeric(
   domain = df_map$Girth_mm)
 ```
 
+```{r}
+
+```
+
+
 ```{r Interactive Map}
 
-m <- leaflet(elementId = "Trees", options = leafletOptions(minZoom = 15, maxZoom = 20)) |>
+map <- leaflet(elementId = "Trees", 
+             data = df_map, # Same data set will be available to all layers
+             options = leafletOptions(minZoom = 15, maxZoom = 20)) |>
+  
   # Tiles
   addTiles(group = "OSM (default)") |> # Gives Open Street Map tiles 
   addProviderTiles(providers$CartoDB.Positron, group = "Positron (minimal)") |>
@@ -81,8 +89,7 @@ m <- leaflet(elementId = "Trees", options = leafletOptions(minZoom = 15, maxZoom
   setView(150.2864, -33.6268, zoom = 18) |>
   
   # Markers
-  addCircleMarkers(data = df_map, 
-                   popup = ~htmlEscape(paste("Girth: ", Girth_mm, "mm", sep = "")), 
+  addCircleMarkers(popup = ~htmlEscape(paste("Girth: ", Girth_mm, "mm", sep = "")), 
                    radius = ~sqrt(Girth_mm)*0.1, 
                    color = ~pal(Girth_mm),
                    group = "Trees") |>
@@ -95,15 +102,18 @@ m <- leaflet(elementId = "Trees", options = leafletOptions(minZoom = 15, maxZoom
       "World Imagery (satellite)"
     ),
     overlayGroups = c("Trees"),
-    options = layersControlOptions(collapsed = FALSE)
-  )
+    options = layersControlOptions(collapsed = FALSE)) |>
 
-m
+  # Legend
+   addLegend("bottomright", pal = pal, values = ~Girth_mm,
+    title = "Girth (mm) at 1.4m",
+    labFormat = labelFormat(suffix = "mm"),
+    opacity = 1)
+
+
+map
 ```
 
-```{r}
-leaflet() |> addProviderTiles(providers$Esri.WorldImagery)
-```
 
 
 ## OB 2
