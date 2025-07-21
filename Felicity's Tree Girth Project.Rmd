@@ -71,8 +71,9 @@ pal <- colorNumeric(
   domain = df_map$Girth_mm)
 ```
 
-```{r}
-
+```{r marker size function}
+# Required due to error caused by division when used within 'radius' parameter
+size_func <- function(x){x/max(x)*5}
 ```
 
 
@@ -90,7 +91,8 @@ map <- leaflet(elementId = "Trees",
   
   # Markers
   addCircleMarkers(popup = ~htmlEscape(paste("Girth: ", Girth_mm, "mm", sep = "")), 
-                   radius = ~sqrt(Girth_mm)*0.1, 
+                   # radius = ~sqrt(Girth_mm)*0.1, 
+                   radius = ~size_func(Girth_mm), 
                    color = ~pal(Girth_mm),
                    group = "Trees") |>
   
