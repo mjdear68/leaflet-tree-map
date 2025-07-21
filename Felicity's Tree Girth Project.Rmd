@@ -62,10 +62,21 @@ df_map <- df_base |>
 
 
 ## OB 1
+```{r continuous colour palette}
+# Create a continuous palette function
+# https://rstudio.github.io/leaflet/articles/colors.html
+# https://colorbrewer2.org/#type=sequential&scheme=RdPu&n=3
+pal <- colorNumeric(
+  palette = "RdPu",
+  domain = df_map$Girth_mm)
+```
+
 ```{r Interactive Map}
-m <- leaflet(elementId = "Trees") |>
-  addTiles(group = "OSM", options = providerTileOptions(minZoom = 17, maxZoom = 20)) |>
-  addMarkers(data = df_map, popup = ~htmlEscape(paste("Girth:", Girth_mm, "mm")))
+
+m <- leaflet(elementId = "Trees", options = leafletOptions(minZoom = 15, maxZoom = 20)) |>
+  addTiles() |> # Gives Open Street Map tiles
+  setView(150.2864, -33.6268, zoom = 18) |>
+  addCircleMarkers(data = df_map, popup = ~htmlEscape(paste("Girth: ", Girth_mm, "mm", sep = "")), radius= df_map$Girth_mm/max(df_map$Girth_mm)*5, color = ~pal(Girth_mm))
 
 m
 ```
