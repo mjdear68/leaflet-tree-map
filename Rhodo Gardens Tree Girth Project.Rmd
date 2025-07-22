@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Introduction
 The girths of 30 trees were measured in the Campbell Rhododendron Gardens, Blackheath, NSW. The measurements were made 1.4m from ground level and were recorded to the nearest centimetre. Photographs containing GPS and other ancilliary information were taken of each tree.
 
-## Objective
+## Objectives
 The objectives (OB) of this project were to:
 
 1. create an interactive map using Leaflet showing the location of each tree with the girth of each tree displayed as a popup
@@ -38,6 +38,7 @@ library(dplyr)
 library(sf) # For making geospatial data frames
 library(leaflet) # For making interactive maps
 library(htmltools) # For map popups
+library(ggplot2)
 ```
 
 
@@ -65,6 +66,8 @@ df_map <- df_base |>
 
 
 ## OB 1
+
+### Create An Interactive Map
 
 Create a continuous palette function based on  https://rstudio.github.io/leaflet/articles/colors.html with the palette selected from https://colorbrewer2.org/#type=sequential&scheme=RdPu&n=3 .
 
@@ -126,8 +129,31 @@ map
 
 
 ## OB 2
+
 ### Boxplot of Girths
+```{r Boxplot of Girths}
+df_map %>%
+  ggplot(aes(y=Girth_mm)) +
+  geom_boxplot() +
+  scale_x_discrete() +
+  labs(title="Boxplot of Tree Girths", y="Girth (mm) at 1.4m")
+```
+
 
 ### Histogram of Girths
+```{r Boxplot of Girths}
+df_map %>%
+  ggplot(aes(x=Girth_mm)) +
+  geom_histogram(bins=5) +
+  labs(title="Histogram of Tree Girths", x="Girth (mm) at 1.4m", y="Frequency")
+```
+
+
 
 ## OB 3
+
+### Summary Table of Girth Statistics
+```{r Summary table of Girth statistics}
+summary(df_map$Girth_mm)
+```
+
