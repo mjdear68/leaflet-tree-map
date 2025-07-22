@@ -141,7 +141,7 @@ df_map %>%
 
 
 ### Histogram of Girths
-```{r Boxplot of Girths}
+```{r Histogram of Girths}
 df_map %>%
   ggplot(aes(x=Girth_mm)) +
   geom_histogram(bins=5) +
