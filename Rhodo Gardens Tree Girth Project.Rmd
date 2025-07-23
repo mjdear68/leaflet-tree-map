@@ -191,4 +191,4 @@ sumtable(df_map[,'Girth_mm'],
       )
 ```
 
-The summary confirms that the mean is 1327mm, almost equal to the median (1330mm). The maximum girth (2410mm) is approximately 5.4 times that of the minimum (450mm).
+The summary confirms that the mean girth is 1327mm, almost equal to the median (1330mm). The maximum girth (2410mm) is approximately 5.4 times that of the minimum (450mm). There is a comparatively large (511mm), giving a coefficient of variation equal to $1327/511=2.60$.
