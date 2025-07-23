@@ -42,6 +42,7 @@ library(leaflet) # For making interactive maps
 library(htmltools) # For map popups
 library(ggplot2)
 library(gridExtra) # For plot layouts
+library(vtable) # For nicely formatted summary statistics tables
 ```
 
 
@@ -150,18 +151,44 @@ plots <- lapply(c(5,7,9), FUN = function(x){
   df_map %>%
   ggplot(aes(x=Girth_mm)) +
   geom_histogram(bins=x) +
-  labs(title="Histogram of Tree Girths", x="Girth (mm) at 1.4m", y="Frequency")
+  labs(title=paste("Histogram of Tree Girths (Bins = ", x, ")", sep=""), x="Girth (mm) at 1.4m", y="Frequency")
 })
 
-grid.arrange(plots)
+grid.arrange(plots[[1]], plots[[2]], plots[[3]], nrow = 1)
 ```
 
+The boxplot and histograms suggest the distribution of girths is slightly positively skewed, with a mean in the range [1200mm, 1300mm]. 
 
 
 ## OB 3
 
 ### Summary Table of Girth Statistics
 ```{r Summary table of Girth statistics}
-summary(df_map$Girth_mm)
+
+sumtable(df_map[,'Girth_mm'],
+         summ = c('notNA(x)',
+                  'countNA(x)',
+                  'propNA(x)',
+                  'mean(x)',   
+                  'sd(x)', 
+                  'min(x)', 
+                  'pctile(x)[25]', 
+                  'median(x)',
+                  'pctile(x)[75]', 
+                  'max(x)'),
+         summ.names = list(
+               c('N',
+                 'NA',
+                 'propNA',
+                 'Mean',
+                 'SD',
+                 'Min',
+                 'Q1',
+                 'Median',
+                 'Q2',
+                 'Max')
+                  )
+      )
 ```
 
+The summary confirms that the mean is 1327mm, almost equal to the median (1330mm). The maximum girth (2410mm) is approximately 5.4 times that of the minimum (450mm).
