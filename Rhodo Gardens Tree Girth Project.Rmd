@@ -2,7 +2,9 @@
 title: "Rhododendron Gardens Tree Girth Project"
 author: "Michael Dear"
 date: "2025-07-20"
-output: html_document
+output: 
+  html_document: 
+    toc: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -17,7 +19,7 @@ The girths of 30 trees were measured in the Campbell Rhododendron Gardens, Black
 ## Objectives
 The objectives (OB) of this project were to:
 
-1. create an interactive map using Leaflet showing the location of each tree with the girth of each tree displayed as a popup
+1. create an interactive map using GPS data extracted from the photographs and the Leaflet library, showing the location of each tree with the girth of each tree displayed as a popup.  
 2. produce a boxplot and histogram of the girth measurements
 3. provide a quantitative summary table of the girth measurements.
 
@@ -39,6 +41,7 @@ library(sf) # For making geospatial data frames
 library(leaflet) # For making interactive maps
 library(htmltools) # For map popups
 library(ggplot2)
+library(gridExtra) # For plot layouts
 ```
 
 
@@ -126,7 +129,8 @@ map <- leaflet(elementId = "Trees",
 map
 ```
 
-
+### Comments
+The extraction of the EXIF data from the photographs was straight forward, although it would be time consuming for a large number of files. Using Leaflet to create the map was also relatively uncomplicated and has produced a framework that could easily be adapted to other mapping projects. The main drawback of this method is inaccuracy in the GPS positioning. The trees appear to be positioned correctly relative to each other, although they are up to several metres off relative to landmarks such as the road to the west of the tree cluster. This inaccuracy would be due in part to the method of standing back from the trees when taking the photographs, since the position of the camera is recorded and not the position of the tree. This error could be overcome by photographing from the base of the tree. For example, a photo could be taken up into the tree's canopy from it's base, thus giving a more accurate GPS record of the tree's position. 
 
 ## OB 2
 
@@ -142,10 +146,14 @@ df_map %>%
 
 ### Histogram of Girths
 ```{r Histogram of Girths}
-df_map %>%
+plots <- lapply(c(5,7,9), FUN = function(x){
+  df_map %>%
   ggplot(aes(x=Girth_mm)) +
-  geom_histogram(bins=5) +
+  geom_histogram(bins=x) +
   labs(title="Histogram of Tree Girths", x="Girth (mm) at 1.4m", y="Frequency")
+})
+
+grid.arrange(plots)
 ```
 
 
