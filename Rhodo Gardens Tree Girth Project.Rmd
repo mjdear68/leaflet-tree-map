@@ -146,6 +146,7 @@ df_map %>%
 
 
 ### Histogram of Girths
+Histograms were plotted with 5, 7, and 9 bins for comparison.
 ```{r Histogram of Girths}
 plots <- lapply(c(5,7,9), FUN = function(x){
   df_map %>%
