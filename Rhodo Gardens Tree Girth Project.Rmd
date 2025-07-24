@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # Introduction
 The girths of 30 trees were measured in the Campbell Rhododendron Gardens, Blackheath, NSW. The measurements were made 1.4m from ground level and were recorded to the nearest centimetre. Photographs containing GPS and other ancilliary information were taken of each tree.
 
-## Objectives
+## Objectives (OB)
 The objectives (OB) of this project were to:
 
 1. create an interactive map using GPS data extracted from the photographs and the Leaflet library, showing the location of each tree with the girth of each tree displayed as a popup.  
@@ -40,8 +40,8 @@ library(dplyr)
 library(sf) # For making geospatial data frames
 library(leaflet) # For making interactive maps
 library(htmltools) # For map popups
-library(ggplot2)
-library(gridExtra) # For plot layouts
+library(ggplot2) # For plotting
+library(patchwork) # For plot layouts
 library(vtable) # For nicely formatted summary statistics tables
 ```
 
@@ -136,7 +136,9 @@ The extraction of the EXIF data from the photographs was straight forward, altho
 ## OB 2
 
 ### Boxplot of Girths
-```{r Boxplot of Girths}
+```{r Boxplot of Girths, fig.height=3}
+# fig.height controls height of plot in knitted document
+
 df_map %>%
   ggplot(aes(y=Girth_mm)) +
   geom_boxplot() +
@@ -147,15 +149,22 @@ df_map %>%
 
 ### Histogram of Girths
 Histograms were plotted with 5, 7, and 9 bins for comparison.
-```{r Histogram of Girths}
+```{r Histogram of Girths, fig.height=3}
+# fig.height controls height of plot in knitted document
+
 plots <- lapply(c(5,7,9), FUN = function(x){
   df_map %>%
   ggplot(aes(x=Girth_mm)) +
   geom_histogram(bins=x) +
-  labs(title=paste("Histogram of Tree Girths (Bins = ", x, ")", sep=""), x="Girth (mm) at 1.4m", y="Frequency")
+  ggtitle("Histogram of Tree Girths", paste("Bins = ", x, sep="")) +
+  labs(x="Girth (mm) at 1.4m", y="Frequency")
 })
 
-grid.arrange(plots[[1]], plots[[2]], plots[[3]], nrow = 1)
+# https://patchwork.data-imaginist.com/articles/guides/layout.html
+# Plot height more easily controlled using fig.height in chunk specifications
+plots[[1]] + plots[[2]] + plots[[3]] 
+# +
+# plot_layout(nrow=1, heights = unit(c(8), c("cm")))
 ```
 
 The boxplot and histograms suggest the distribution of girths is slightly positively skewed, with a mean in the range [1200mm, 1300mm]. 
