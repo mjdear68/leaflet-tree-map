@@ -149,7 +149,7 @@ df_map %>%
 
 ### Histogram of Girths
 Histograms were plotted with 5, 7, and 9 bins for comparison.
-```{r Histogram of Girths, fig.height=3}
+```{r Histogram of Girths, fig.height=3.5}
 # fig.height controls height of plot in knitted document
 
 plots <- lapply(c(5,7,9), FUN = function(x){
