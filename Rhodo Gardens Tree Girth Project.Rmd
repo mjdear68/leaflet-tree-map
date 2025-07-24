@@ -138,6 +138,7 @@ The extraction of the EXIF data from the photographs was straight forward, altho
 ### Boxplot of Girths
 ```{r Boxplot of Girths, fig.height=3}
 # fig.height controls height of plot in knitted document
+# https://stackoverflow.com/a/39634521/8299958
 
 df_map %>%
   ggplot(aes(y=Girth_mm)) +
@@ -151,6 +152,7 @@ df_map %>%
 Histograms were plotted with 5, 7, and 9 bins for comparison.
 ```{r Histogram of Girths, fig.height=3.5}
 # fig.height controls height of plot in knitted document
+# https://stackoverflow.com/a/39634521/8299958
 
 plots <- lapply(c(5,7,9), FUN = function(x){
   df_map %>%
